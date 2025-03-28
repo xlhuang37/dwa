@@ -2290,6 +2290,7 @@ clockcache_get_internal(clockcache   *cc,        // IN
    platform_status   status;
    uint64            start, elapsed;
    int               r; 
+
    // We expect entry_number to be valid, but it's still validated below
    // in case some arithmetic goes wrong.
    entry_number = clockcache_lookup(cc, addr);
@@ -3576,5 +3577,4 @@ void reset_enable_print()
 {
    enable_print = FALSE;
 }
-
 
