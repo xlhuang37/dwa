@@ -86,6 +86,9 @@ io_handle_init(laio_handle         *io,
       fallocate(io->fd, 0, 0, 128 * 1024);
    } else {
       io->fd = open(cfg->filename, cfg->flags);
+      if (io->fd == -1) {
+	platform_error_log("Failed to open %s\n", cfg->filename);
+      }
    }
    platform_assert(io->fd != -1);
 
@@ -150,7 +153,7 @@ laio_write(io_handle *ioh, void *buf, uint64 bytes, uint64 addr)
    int          ret;
 
    io  = (laio_handle *)ioh;
-   platform_default_log("%s addr=%lu\n", __func__, addr);
+   //platform_default_log("%s addr=%lu\n", __func__, addr);
    ret = pwrite(io->fd, buf, bytes, addr);
    if (ret == bytes) {
       return STATUS_OK;

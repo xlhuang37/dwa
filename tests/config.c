@@ -53,8 +53,8 @@ void
 config_set_defaults(master_config *cfg)
 {
    *cfg = (master_config){
-      .io_filename              = "db",
-      .cache_logfile            = "cache_log",
+      .io_filename              = "/mnt/splinterdb.db",
+      .cache_logfile            = "/mnt/splinterdb.cache_log",
       .page_size                = TEST_CONFIG_DEFAULT_PAGE_SIZE,
       .extent_size              = TEST_CONFIG_DEFAULT_EXTENT_SIZE,
       .io_flags                 = O_RDWR | O_CREAT,

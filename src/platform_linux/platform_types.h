@@ -20,7 +20,7 @@
 #include <execinfo.h>
 
 // platform status
-typedef typeof(EINVAL) internal_platform_status;
+typedef int internal_platform_status;
 
 #define STATUS_OK             CONST_STATUS(0)
 #define STATUS_NO_MEMORY      CONST_STATUS(ENOMEM)
