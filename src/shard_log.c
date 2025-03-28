@@ -267,16 +267,16 @@ shard_log_write(log_handle *logh, slice key, message msg, uint64 generation)
          return -1;
       }
    } else {
-     page_reference ref = { .addr = thread_data->addr };
-     page        = cache_get_no_auth(cc, &ref, TRUE, PAGE_TYPE_LOG);
-     //bool pass_auth = shard_log_page_authenticate(log->cfg, page);
-     //platform_assert(pass_auth);
-     uint64 wait = 1;
-     while (!cache_claim(cc, page)) {
-       platform_sleep(wait);
-       wait = wait > 1024 ? wait : 2 * wait;
-     }
-     cache_lock(cc, page);
+      //page_reference ref = { .addr = thread_data->addr };
+      //page        = cache_get_no_auth(cc, &ref, TRUE, PAGE_TYPE_LOG);
+      //bool pass_auth = shard_log_page_authenticate(log->cfg, page);
+      //platform_assert(pass_auth);
+      //uint64 wait = 1;
+      //while (!cache_claim(cc, page)) {
+      //   platform_sleep(wait);
+      //   wait = wait > 1024 ? wait : 2 * wait;
+      //}
+      //cache_lock(cc, page);
       page = thread_data->page;
       platform_assert(page != NULL);
    }
@@ -323,9 +323,9 @@ shard_log_write(log_handle *logh, slice key, message msg, uint64 generation)
    //char buf[64] = { 0 };
    //snprintf(buf, 64, "hdr checksum addr=%lu:\n", page->disk_addr);
    //print_sig((char*)&hdr->checksum, HASH_SIZE, buf);
-   cache_unlock(cc, page);
-   cache_unclaim(cc, page);
-   cache_unget(cc, page);
+   //cache_unlock(cc, page);
+   //cache_unclaim(cc, page);
+   //cache_unget(cc, page);
 
    return 0;
 }
@@ -555,4 +555,3 @@ shard_log_print(shard_log *log)
       extent_addr = next_extent_addr;
    }
 }
-

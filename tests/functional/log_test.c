@@ -59,14 +59,14 @@ test_log_crash(clockcache             *cc,
    magic = log_magic(logh);
 
    merge_accumulator_init(&msg, hid);
-platform_default_log("1\n");
+
    for (i = 0; i < num_entries; i++) {
       test_key(keybuffer, TEST_RANDOM, i, 0, 0, cfg->data_cfg->key_size, 0);
       generate_test_message(gen, i, &msg);
       slice skey = slice_create(1 + (i % cfg->data_cfg->key_size), keybuffer);
       log_write(logh, skey, merge_accumulator_to_message(&msg), i);
    }
-platform_default_log("2\n");
+
    if (crash) {
       clockcache_deinit(cc);
       rc = clockcache_init(cc,
@@ -80,15 +80,13 @@ platform_default_log("2\n");
                            platform_get_module_id());
       platform_assert_status_ok(rc);
    }
-platform_default_log("3\n");
+
    rc = shard_log_iterator_init((cache *)cc, cfg, hid, addr, magic, &itor);
    platform_assert_status_ok(rc);
    itorh = (iterator *)&itor;
 
    iterator_at_end(itorh, &at_end);
-  platform_default_log("4\n");
    for (i = 0; i < num_entries && !at_end; i++) {
-	   platform_default_log("5\n");
       test_key(keybuffer, TEST_RANDOM, i, 0, 0, cfg->data_cfg->key_size, 0);
       generate_test_message(gen, i, &msg);
       slice   skey = slice_create(1 + (i % cfg->data_cfg->key_size), keybuffer);
@@ -279,7 +277,6 @@ log_test(int argc, char *argv[])
                             &gen,
                             config_argc,
                             config_argv);
-   platform_default_log("\npassed parse arg in log test!!\n");
    if (!SUCCESS(status)) {
       platform_error_log("log_test: failed to parse config: %s\n",
                          platform_status_to_string(status));
@@ -294,9 +291,7 @@ log_test(int argc, char *argv[])
 
    platform_io_handle *io = TYPED_MALLOC(hid, io);
    platform_assert(io != NULL);
-   platform_default_log("\n passed TYPED MALLOC!!\n");
    status = io_handle_init(io, &io_cfg, hh, hid);
-   platform_default_log("\nnot stuck in io handle init!!\n");
    if (!SUCCESS(status)) {
       rc = -1;
       goto free_iohandle;
@@ -332,16 +327,12 @@ log_test(int argc, char *argv[])
 
    shard_log *log = TYPED_MALLOC(hid, log);
    platform_assert(log != NULL);
-   platform_default_log("\nsetup is all fine!!\n");
    if (run_perf_test) {
-	   platform_default_log("\nperf test!!\n");
       ret = test_log_perf(
          (cache *)cc, &log_cfg, log, 200000000, &gen, 16, ts, hid);
-      platform_default_log("\nperf test done !!\n");
       rc = -1;
       platform_assert_status_ok(ret);
    } else if (run_crash_test) {
-	   platform_default_log("\nlog crash test!!\n");
       rc = test_log_crash(cc,
                           &cache_cfg,
                           (io_handle *)io,
@@ -354,10 +345,8 @@ log_test(int argc, char *argv[])
                           &gen,
                           500000,
                           TRUE /* crash */);
-      platform_default_log("\nlog crash test passed!!\n");
       platform_assert(rc == 0);
    } else {
-	   platform_default_log("\nStarted log_ crash test that doesnt crash!!\n");
       rc = test_log_crash(cc,
                           &cache_cfg,
                           (io_handle *)io,
@@ -370,12 +359,10 @@ log_test(int argc, char *argv[])
                           &gen,
                           500000,
                           FALSE /* don't cash */);
-      platform_default_log("\nfinished crash test that doesnt crash!!\n");
       platform_assert(rc == 0);
    }
 
    clockcache_deinit(cc);
-   platform_default_log("\ndeinit is fine!!\n");
    platform_free(hid, log);
    platform_free(hid, cc);
    rc_allocator_deinit(&al);
